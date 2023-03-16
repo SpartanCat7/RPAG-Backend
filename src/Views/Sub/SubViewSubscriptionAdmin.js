@@ -6,6 +6,7 @@ import SubList from "./Components/SubList";
 import { getAlertTypes } from "../../Providers/AlertTypeProvider";
 import { getSubscriptionsByUserIdOnSnapshot } from "../../Providers/SubscriptionProvider";
 import { auth } from "../../Utils/Firebase";
+import ModifySubscriptionForm from "./Components/ModifySubscriptionForm";
 
 
 export default function SubViewSubscriptionAdmin() {
@@ -15,7 +16,7 @@ export default function SubViewSubscriptionAdmin() {
     const [subscriptionList, setSubscriptionList] = useState();
     const [selectedSubscriptionId, setSelectedSubscriptionId] = useState();
     //const [allowedAlertTypes, setAllowedAlertTypes] = useState();
-    const [listListener, setListListener] = useState();
+    const [listenerStatus, setListenerStatus] = useState();
     const [alertTypes, setAlertTypes] = useState();
 
     useEffect(() => {
@@ -33,20 +34,30 @@ export default function SubViewSubscriptionAdmin() {
     }, []);
 
     useEffect(() => {
-        if (userData && !listListener) {
-            let listener = getSubscriptionsByUserIdOnSnapshot(auth.currentUser.uid, (snap) => {
+        if (userData && !listenerStatus) {
+            getSubscriptionsByUserIdOnSnapshot(auth.currentUser.uid, (snap) => {
                 setSubscriptionList(snap.docs.map((doc, index) => {
                     return {
                         ...doc.data(),
                         subId: doc.id
                     }
                 }))
-                setListListener(listener);
+                setListenerStatus("SET");
             }, (err) => {
                 console.log(err)
             })
         }
     }, [userData])
+
+    const getSubscriptionById = (subscriptionId) => {
+        if (subscriptionId && subscriptionList) {
+            for (let sub of subscriptionList) {
+                if (sub.subId == subscriptionId) {
+                    return sub;
+                }
+            }
+        }
+    }
 
     return (
         <Container>
@@ -72,7 +83,7 @@ export default function SubViewSubscriptionAdmin() {
                                 <Accordion.Item eventKey="1">
                                     <Accordion.Header>Modificar</Accordion.Header>
                                     <Accordion.Body>
-                                        {"<ModifyModUserMenu selectedUser={selectedUser} />"}
+                                        <ModifySubscriptionForm selected={getSubscriptionById(selectedSubscriptionId)} />
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 <Accordion.Item eventKey="2">

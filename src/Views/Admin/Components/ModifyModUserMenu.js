@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { setUserUsername } from "../../../Providers/UserProvider";
-import InfoChangeOption from "./InfoChangeOption";
-import ValueUpdateModal from "./ValueUpdateModal";
+import InfoChangeOption from "../../../CoreComponents/InfoChangeOption";
+import ValueUpdateModal from "../../../CoreComponents/ValueUpdateModal";
 
 export default function ModifyModUserMenu({ selectedUser }) {
 

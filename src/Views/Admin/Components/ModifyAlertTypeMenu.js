@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
-import { setDescription, setIcon, setLifetime, setName } from "../../../Providers/AlertTypeProvider";
-import InfoChangeOption from "./InfoChangeOption";
-import ValueUpdateModal from "./ValueUpdateModal";
+import { setDescription, setIcon, setLifetime, setName, setTypeActive, setTypeColor } from "../../../Providers/AlertTypeProvider";
+import InfoChangeOption from "../../../CoreComponents/InfoChangeOption";
+import ValueUpdateModal from "../../../CoreComponents/ValueUpdateModal";
+import { hexToRgbStr } from "../../../Utils/ColorUtils";
 
 export default function ModifyAlertTypeMenu({ selectedType }) {
 
@@ -74,6 +75,19 @@ export default function ModifyAlertTypeMenu({ selectedType }) {
         }
     }
 
+    const updateColorFormContent = {
+        title: "Actualizar Color",
+        body: (setNewValue) => (
+            <Form>
+                <Form.Group>
+                    <Form.Label>Seleccione un nuevo color</Form.Label>
+                    <Form.Control defaultValue={selectedType.color} type="color" onChange={(event) => { setNewValue(event.target.value) }} />
+                </Form.Group>
+            </Form>
+        ),
+        saveAction: (val) => { setTypeColor(selectedType.typeId, val) }
+    }
+
     return (
         <>
             {(selectedType) ? (
@@ -103,6 +117,18 @@ export default function ModifyAlertTypeMenu({ selectedType }) {
                             infoValue={selectedType.lifetime}
                             btnText={"Actualizar"}
                             btnAction={() => openUpdateModal(updateLifetimeFormContent)}
+                        />
+                        <InfoChangeOption
+                            infoName={"Color"}
+                            infoValue={selectedType.color}
+                            btnText={"Actualizar"}
+                            btnAction={() => openUpdateModal(updateColorFormContent)}
+                        />
+                        <InfoChangeOption
+                            infoName={"Activo"}
+                            infoValue={selectedType.active}
+                            btnText={selectedType.active ? "Desactivar" : "Activar"}
+                            btnAction={() => setTypeActive(selectedType.typeId, !selectedType.active)}
                         />
                     </Row>
                     <ValueUpdateModal

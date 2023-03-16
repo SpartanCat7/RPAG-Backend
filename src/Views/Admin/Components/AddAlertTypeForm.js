@@ -2,6 +2,7 @@ import { getDownloadURL } from "firebase/storage";
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { addAlertType, uploadIconFile } from "../../../Providers/AlertTypeProvider";
+import { hexToRgbStr } from "../../../Utils/ColorUtils";
 
 export default function AddAlertTypeForm() {
 
@@ -10,6 +11,8 @@ export default function AddAlertTypeForm() {
     const [inputDescription, setInputDescription] = useState();
     const [inputLifetime, setInputLifetime] = useState();
     const [inputIcon, setInputIcon] = useState();
+    const [inputColor, setInputColor] = useState();
+    const [inputActive, setInputActive] = useState(false);
 
     function getFileExtension(file) {
         return '.' + file.name.split(".").pop();
@@ -25,7 +28,9 @@ export default function AddAlertTypeForm() {
                 inputDescription,
                 res.ref.fullPath,
                 inputLifetime,
-                downloadUrl
+                downloadUrl,
+                inputColor,
+                inputActive
             ).then((res) => {
                 console.log("New type created");
             }).catch((err) => {
@@ -57,6 +62,17 @@ export default function AddAlertTypeForm() {
             <Form.Group className="mt-3">
                 <Form.Label>Icono</Form.Label>
                 <Form.Control type="file" onChange={(event) => { setInputIcon(event.target.files) }} />
+            </Form.Group>
+            <Form.Group className="mt-3">
+                <Form.Label>Color</Form.Label>
+                <Form.Control type="color" onChange={(event) => { setInputColor(event.target.value) }} />
+            </Form.Group>
+            <Form.Group className="mt-3">
+                <Form.Check
+                    type="switch"
+                    label="Activo"
+                    checked={inputActive}
+                    onChange={(event) => setInputActive(event.target.checked)}/>
             </Form.Group>
             <Button className="mt-3" onClick={() => { addNewAlertType() }}>
                 Añadir Tipo de Alerta

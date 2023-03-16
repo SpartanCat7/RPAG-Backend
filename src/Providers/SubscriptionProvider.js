@@ -1,4 +1,4 @@
-import { addDoc, collection, FirestoreError, onSnapshot, query, QuerySnapshot, where } from "firebase/firestore";
+import { addDoc, collection, doc, FirestoreError, onSnapshot, query, QuerySnapshot, updateDoc, where } from "firebase/firestore";
 import { firestore } from "../Utils/Firebase";
 
 const getSubscriptionsByUserIdQuery = (userId) => {
@@ -37,4 +37,23 @@ const addSubscription = (userId, name, date, typeId, destination) => {
     })
 }
 
-export { getSubscriptionsByUserIdQuery, getSubscriptionsByUserIdOnSnapshot, addSubscription }
+const setName = (subId, name) => {
+    return updateDoc(doc(firestore, "Subscriptions", subId), { name });
+}
+
+const setActive = (subId, active) => {
+    return updateDoc(doc(firestore, "Subscriptions", subId), { active });
+}
+
+const setDestination = (subId, destination) => {
+    return updateDoc(doc(firestore, "Subscriptions", subId), { destination });
+}
+
+export {
+    getSubscriptionsByUserIdQuery,
+    getSubscriptionsByUserIdOnSnapshot,
+    addSubscription,
+    setName,
+    setActive,
+    setDestination
+}

@@ -11,7 +11,7 @@ export default function SubList({ subscriptionList, setSelectedSubId }) {
                 {
                     subscriptionList.map((sub, index) => {
                         return (<ListGroup.Item key={sub.subId} action onClick={() => setSelectedSubId(sub.subId)}>
-                            {index} - {sub.typeId} - {sub.destination} - {"(" + sub.active + ")"}
+                            {index} - {sub.name} - {sub.typeId} - {"(" + (sub.active ? "Activo" : "Inactivo")  + ")"}
                         </ListGroup.Item>)
                     })
                 }

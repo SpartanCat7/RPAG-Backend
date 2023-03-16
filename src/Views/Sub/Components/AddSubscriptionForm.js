@@ -22,6 +22,8 @@ export default function AddSubscriptionForm({ alertTypes, userData }) {
         })
     }
 
+    let allowedAlertTypes = userData && userData.subAllowedTypes ? JSON.parse(userData.subAllowedTypes) : [];
+
     return (
         <Row>
             <Col>
@@ -45,18 +47,23 @@ export default function AddSubscriptionForm({ alertTypes, userData }) {
                         <ListGroup>
                             {
                                 alertTypes.map((v, i) => {
-                                    return (
-                                        <ListGroup.Item key={"type_" + i}>
-                                            <Row>
-                                                <Col>
-                                                    <Form.Check name="TypeSelector" type="radio" label={v.name} onChange={(event) => { setSelectedType(v.typeId) }} />
-                                                </Col>
-                                                <Col xs={"auto"}>
-                                                    <img src={v.iconUrl} className={"AlertTypeIcon"} />
-                                                </Col>
-                                            </Row>
-                                        </ListGroup.Item>
-                                    )
+                                    if (allowedAlertTypes.includes(v.typeId)) {
+                                        return (
+                                            <ListGroup.Item key={"type_" + i}>
+                                                <Row>
+                                                    <Col>
+                                                        <Form.Check name="TypeSelector" type="radio" label={v.name} onChange={(event) => { setSelectedType(v.typeId) }} />
+                                                    </Col>
+                                                    <Col xs={"auto"}>
+                                                        <img src={v.iconUrl} className={"AlertTypeIcon"} />
+                                                    </Col>
+                                                </Row>
+                                            </ListGroup.Item>
+                                        )
+                                    } else {
+                                        return null;
+                                    }
+                                    
                                 })
                             }
                         </ListGroup>

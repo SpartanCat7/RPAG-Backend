@@ -11,13 +11,15 @@ import { firestore, storage } from "../Utils/Firebase";
  * @param {string} icon 
  * @param {number} lifetime
  */
-function addAlertType(id, name, description, icon, lifetime, iconUrl) {
+function addAlertType(id, name, description, icon, lifetime, iconUrl, color, active) {
     return setDoc(doc(firestore, "AlertTypes", id), {
         name,
         description,
         icon,
         iconUrl,
-        lifetime
+        lifetime,
+        color,
+        active
     });
 }
 
@@ -60,6 +62,10 @@ function setLifetime(typeId, lifetime) {
     return updateDoc(doc(firestore, "AlertTypes", typeId), { lifetime });
 }
 
+function setTypeActive(typeId, active) {
+    return updateDoc(doc(firestore, "AlertTypes", typeId), { active });
+}
+
 function setIcon(typeId, fileName, file, callback, onError) {
     uploadIconFile(file, fileName).then(async (res) => {
         let downloadUrl = await getDownloadURL(res.ref);
@@ -68,6 +74,10 @@ function setIcon(typeId, fileName, file, callback, onError) {
             iconUrl: downloadUrl
         }).then(callback).catch(err => onError(err))
     }).catch(err => onError(err));
+}
+
+function setTypeColor(typeId, color) {
+    return updateDoc(doc(firestore, "AlertTypes", typeId), { color });
 }
 
 export { 
@@ -79,5 +89,7 @@ export {
     setName,
     setDescription,
     setLifetime,
-    setIcon
+    setIcon,
+    setTypeColor,
+    setTypeActive
 }
